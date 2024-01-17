@@ -1,8 +1,8 @@
-package service
+package courses
 
 import (
 	"HackFest/models"
-	"HackFest/repository"
+	"HackFest/repository/courses"
 )
 
 type CourseService interface {
@@ -12,10 +12,10 @@ type CourseService interface {
 }
 
 type courseService struct {
-	courseRepo repository.CourseRepository
+	courseRepo courses.CourseRepository
 }
 
-func NewCourseService(courseRepo repository.CourseRepository) CourseService {
+func NewCourseService(courseRepo courses.CourseRepository) CourseService {
 	return &courseService{courseRepo}
 }
 

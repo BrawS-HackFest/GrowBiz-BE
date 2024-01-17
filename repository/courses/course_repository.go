@@ -1,4 +1,4 @@
-package repository
+package courses
 
 import (
 	"HackFest/models"
@@ -14,7 +14,7 @@ type CourseRepository interface {
 type courseRepository struct {
 	db *gorm.DB
 }
- 
+
 func NewCourseRepository(db *gorm.DB) CourseRepository {
 	return &courseRepository{db}
 }

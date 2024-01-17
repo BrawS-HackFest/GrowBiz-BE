@@ -3,17 +3,18 @@ package handler
 import (
 	"HackFest/models"
 	"HackFest/service"
+	"HackFest/service/courses"
 	"HackFest/utils"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
 type ReviewHandler struct {
-	reviewService service.ReviewService
+	reviewService courses.ReviewService
 	userService   service.UserService
 }
 
-func NewReviewHandler(reviewService service.ReviewService, userService service.UserService) *ReviewHandler {
+func NewReviewHandler(reviewService courses.ReviewService, userService service.UserService) *ReviewHandler {
 	return &ReviewHandler{
 		reviewService: reviewService,
 		userService:   userService,
@@ -53,5 +54,5 @@ func (h *ReviewHandler) FindByCourseID(c *gin.Context) {
 }
 
 func (h *ReviewHandler) Update(c *gin.Context) {
-	
+
 }

@@ -31,7 +31,7 @@ func (th *TransactionHandler) Create(c *gin.Context) {
 	}
 
 	if create.UserID == "" {
-		utils.HttpFailOrError(c, 400, "Already bought the course", err)
+		utils.HttpFailOrError(c, 400, "Already bought the courses", err)
 		return
 	}
 	utils.HttpSuccess(c, "Transaction created successfully", create)

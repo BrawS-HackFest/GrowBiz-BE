@@ -4,6 +4,7 @@ import (
 	"HackFest/config/mdtrans"
 	"HackFest/models"
 	"HackFest/repository"
+	"HackFest/repository/courses"
 	"HackFest/utils"
 	"gorm.io/gorm"
 	"log"
@@ -20,16 +21,16 @@ type TransactionService interface {
 type transactionService struct {
 	transactionRepository repository.TransactionRepository
 	userRepository        repository.UserRepository
-	courseRepository      repository.CourseRepository
-	courseUserRepository  repository.CourseUserRepository
+	courseRepository      courses.CourseRepository
+	courseUserRepository  courses.CourseUserRepository
 	midtransClient        *mdtrans.MdtClient
 }
 
 func NewTransactionService(
 	transactionRepository repository.TransactionRepository,
 	userRepository repository.UserRepository,
-	courseRepository repository.CourseRepository,
-	courseUserRepository repository.CourseUserRepository,
+	courseRepository courses.CourseRepository,
+	courseUserRepository courses.CourseUserRepository,
 	midtransClient *mdtrans.MdtClient) TransactionService {
 	return &transactionService{
 		transactionRepository: transactionRepository,

@@ -3,6 +3,7 @@ package handler
 import (
 	"HackFest/models"
 	"HackFest/service"
+	"HackFest/service/courses"
 	"HackFest/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -10,11 +11,11 @@ import (
 )
 
 type CourseHandler struct {
-	courseService service.CourseService
+	courseService courses.CourseService
 	userService   service.UserService
 }
 
-func NewCourseHandler(courseService service.CourseService, userService service.UserService) *CourseHandler {
+func NewCourseHandler(courseService courses.CourseService, userService service.UserService) *CourseHandler {
 	return &CourseHandler{
 		courseService: courseService,
 		userService:   userService,
@@ -49,7 +50,7 @@ func (ch *CourseHandler) FindByID(c *gin.Context) {
 	id, _ := strconv.Atoi(idStr)
 	result, err := ch.courseService.FindByID(uint(id))
 	if err != nil {
-		utils.HttpInternalError(c, "Can't get course", err)
+		utils.HttpInternalError(c, "Can't get courses", err)
 		return
 	}
 	var reviews []models.ReviewResult
@@ -82,7 +83,7 @@ func (ch *CourseHandler) FindByID(c *gin.Context) {
 		Pict:   result.Link,
 		Review: reviews,
 	}
-	utils.HttpSuccess(c, "Success get course", fixResult)
+	utils.HttpSuccess(c, "Success get courses", fixResult)
 }
 
 func (ch *CourseHandler) Create(c *gin.Context) {
@@ -129,19 +130,19 @@ func (ch *CourseHandler) Create(c *gin.Context) {
 	}
 
 	if _, err := ch.courseService.Create(c1); err != nil {
-		utils.HttpInternalError(c, "Can't create course", err)
+		utils.HttpInternalError(c, "Can't create courses", err)
 		return
 	}
 	if _, err := ch.courseService.Create(c2); err != nil {
-		utils.HttpInternalError(c, "Can't create course", err)
+		utils.HttpInternalError(c, "Can't create courses", err)
 		return
 	}
 	if _, err := ch.courseService.Create(c3); err != nil {
-		utils.HttpInternalError(c, "Can't create course", err)
+		utils.HttpInternalError(c, "Can't create courses", err)
 		return
 	}
 	if _, err := ch.courseService.Create(c4); err != nil {
-		utils.HttpInternalError(c, "Can't create course", err)
+		utils.HttpInternalError(c, "Can't create courses", err)
 		return
 	}
 }

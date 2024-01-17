@@ -6,7 +6,9 @@ import (
 	"HackFest/handler"
 	"HackFest/middleware"
 	"HackFest/repository"
+	"HackFest/repository/courses"
 	"HackFest/service"
+	courses2 "HackFest/service/courses"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -20,11 +22,11 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	us := service.NewUserService(ur, ctr)
 	uh := handler.NewUserHandler(us)
 
-	cr := repository.NewCourseRepository(db)
-	cs := service.NewCourseService(cr)
+	cr := courses.NewCourseRepository(db)
+	cs := courses2.NewCourseService(cr)
 	ch := handler.NewCourseHandler(cs, us)
 
-	cur := repository.NewCourseUserRepository(db)
+	cur := courses.NewCourseUserRepository(db)
 
 	tr := repository.NewTransactionRepository(db)
 	ts := service.NewTransactionService(tr, ur, cr, cur, &mdt)

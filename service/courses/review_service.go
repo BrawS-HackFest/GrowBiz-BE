@@ -1,8 +1,8 @@
-package service
+package courses
 
 import (
 	"HackFest/models"
-	"HackFest/repository"
+	"HackFest/repository/courses"
 	"gorm.io/gorm"
 )
 
@@ -13,10 +13,10 @@ type ReviewService interface {
 }
 
 type reviewService struct {
-	reviewRepository repository.ReviewRepository
+	reviewRepository courses.ReviewRepository
 }
 
-func NewReviewService(reviewRepository repository.ReviewRepository) ReviewService {
+func NewReviewService(reviewRepository courses.ReviewRepository) ReviewService {
 	return &reviewService{reviewRepository}
 }
 

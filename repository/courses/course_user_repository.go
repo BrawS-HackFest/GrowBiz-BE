@@ -1,4 +1,4 @@
-package repository
+package courses
 
 import (
 	"HackFest/models"
