@@ -32,6 +32,7 @@ func MigrateDb(db *gorm.DB) {
 		&models.CourseUser{},
 		&models.CourseMaterial{},
 		&models.Transaction{},
+		&models.Article{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate")

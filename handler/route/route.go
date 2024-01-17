@@ -11,7 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *handler.TransactionHandler) {
+func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *handler.TransactionHandler,
+	*handler.ArticleHandler) {
 	mdt := mdtrans.NewMdtDriver()
 	ctr := repository.NewCategoryRepository(db)
 
@@ -29,7 +30,11 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	ts := service.NewTransactionService(tr, ur, cr, cur, &mdt)
 	th := handler.NewTransactionHandler(ts)
 
-	return uh, ch, th
+	ar := repository.NewArticleRepository(db)
+	as := service.NewArticleService(ar)
+	ah := handler.NewArticleHandler(as)
+
+	return uh, ch, th, ah
 }
 
 func Route(r *gin.Engine) {
@@ -47,11 +52,12 @@ func Route(r *gin.Engine) {
 		}
 	})
 
-	userHandler, courseHandler, transactionHandler := initHandler(database.InitDb())
+	userHandler, courseHandler, transactionHandler, articleHandler := initHandler(database.InitDb())
 
 	user := r.Group("/users")
 	course := r.Group("/courses")
 	transaction := r.Group("/transactions")
+	article := r.Group("/article")
 
 	user.GET("/profile", middleware.AuthMiddleware(), userHandler.GetProfile)
 	user.PATCH("/update-profile", userHandler.UpdateUser)
@@ -65,4 +71,8 @@ func Route(r *gin.Engine) {
 	transaction.GET("/:id", transactionHandler.FindByID)
 	transaction.POST("/charge", middleware.AuthMiddleware(), transactionHandler.Create) //auth
 	transaction.POST("/update", transactionHandler.Update)
+
+	article.GET("/all", articleHandler.FindAll)
+	article.GET("/:id", articleHandler.FindByID)
+	article.POST("/create", articleHandler.Create)
 }
