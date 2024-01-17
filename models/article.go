@@ -16,3 +16,7 @@ type ArticleComment struct {
 	ArticleID uint
 	UserID    string
 }
+
+type CommentPost struct {
+	Comment string `json:"comment"`
+}

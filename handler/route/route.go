@@ -9,6 +9,7 @@ import (
 	"HackFest/repository/article"
 	"HackFest/repository/courses"
 	"HackFest/service"
+	article2 "HackFest/service/article"
 	courses2 "HackFest/service/courses"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -34,7 +35,7 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	th := handler.NewTransactionHandler(ts)
 
 	ar := article.NewArticleRepository(db)
-	as := service.NewArticleService(ar)
+	as := article2.NewArticleService(ar)
 	ah := handler.NewArticleHandler(as)
 
 	return uh, ch, th, ah

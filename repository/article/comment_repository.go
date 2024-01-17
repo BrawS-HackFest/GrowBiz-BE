@@ -9,7 +9,7 @@ type CommentRepository interface {
 	Create(comment models.ArticleComment) error
 	FindByArticleID(id uint) ([]models.ArticleComment, error)
 	FindByID(id uint) (models.ArticleComment, error)
-	Update(comment models.ArticleComment) error
+	Update(id uint, comment models.ArticleComment) error
 	Delete(id uint) error
 }
 
@@ -44,8 +44,8 @@ func (c *commentRepository) FindByID(id uint) (models.ArticleComment, error) {
 	return models.ArticleComment{}, nil
 }
 
-func (c *commentRepository) Update(comment models.ArticleComment) error {
-	if err := c.db.Model(&comment).Update("comment", comment.Comment).Error; err != nil {
+func (c *commentRepository) Update(id uint, comment models.ArticleComment) error {
+	if err := c.db.Model(&comment).Where("id = ?", id).Update("comment", comment.Comment).Error; err != nil {
 		return err
 	}
 	return nil

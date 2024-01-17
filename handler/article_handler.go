@@ -2,7 +2,7 @@ package handler
 
 import (
 	"HackFest/models"
-	"HackFest/service"
+	"HackFest/service/article"
 	"HackFest/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -10,10 +10,10 @@ import (
 )
 
 type ArticleHandler struct {
-	articleService service.ArticleService
+	articleService article.ArticleService
 }
 
-func NewArticleHandler(article service.ArticleService) *ArticleHandler {
+func NewArticleHandler(article article.ArticleService) *ArticleHandler {
 	return &ArticleHandler{
 		articleService: article,
 	}
