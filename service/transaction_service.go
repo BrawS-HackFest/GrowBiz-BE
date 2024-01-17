@@ -13,7 +13,7 @@ type TransactionService interface {
 	Create(userID string, transaction models.TransactionPost) (models.Transaction, error)
 	FindAll() ([]models.Transaction, error)
 	FindByID(id uint) (models.Transaction, error)
-	FindByUserID(id string) ([]models.Transaction, error)
+	FindByUserID(id string) ([]models.TransactionByUser, error)
 	Update(orderID string) (models.Transaction, error)
 }
 
@@ -94,12 +94,27 @@ func (ts *transactionService) FindByID(id uint) (models.Transaction, error) {
 	return data, nil
 }
 
-func (ts *transactionService) FindByUserID(id string) ([]models.Transaction, error) {
+func (ts *transactionService) FindByUserID(id string) ([]models.TransactionByUser, error) {
 	transactions, err := ts.transactionRepository.FindByUserID(id)
 	if err != nil {
 		return nil, err
 	}
-	return transactions, nil
+	var data []models.TransactionByUser
+
+	for _, v := range transactions {
+		course, err := ts.courseRepository.FindByID(uint(v.CourseID))
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, models.TransactionByUser{
+			ID:        v.ID,
+			CreatedAt: v.CreatedAt,
+			Pict:      course.Link,
+			Title:     course.Name,
+		})
+	}
+
+	return data, nil
 }
 
 func (ts *transactionService) Update(orderID string) (models.Transaction, error) {

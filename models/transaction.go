@@ -1,6 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 type Transaction struct {
 	gorm.Model
@@ -27,4 +30,11 @@ type TransactionByID struct {
 	VANumber string `json:"va_number"`
 	OrderID  string `json:"order_id"`
 	Status   string `json:"status"`
+}
+
+type TransactionByUser struct {
+	ID        uint      `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	Pict      string    `json:"pict"`
+	Title     string    `json:"title"`
 }
