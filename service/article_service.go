@@ -2,7 +2,7 @@ package service
 
 import (
 	"HackFest/models"
-	"HackFest/repository"
+	"HackFest/repository/article"
 )
 
 type ArticleService interface {
@@ -12,10 +12,10 @@ type ArticleService interface {
 }
 
 type articleService struct {
-	articleRepository repository.ArticleRepository
+	articleRepository article.ArticleRepository
 }
 
-func NewArticleService(articleRepository repository.ArticleRepository) ArticleService {
+func NewArticleService(articleRepository article.ArticleRepository) ArticleService {
 	return &articleService{
 		articleRepository,
 	}
