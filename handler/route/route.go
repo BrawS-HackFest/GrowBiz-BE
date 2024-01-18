@@ -24,11 +24,12 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	us := service.NewUserService(ur, ctr)
 	uh := handler.NewUserHandler(us)
 
+	cur := courses.NewCourseUserRepository(db)
+	cus := courses2.NewCourseUserService(cur)
+
 	cr := courses.NewCourseRepository(db)
 	cs := courses2.NewCourseService(cr)
-	ch := handler.NewCourseHandler(cs, us)
-
-	cur := courses.NewCourseUserRepository(db)
+	ch := handler.NewCourseHandler(cs, us, cus)
 
 	tr := repository.NewTransactionRepository(db)
 	ts := service.NewTransactionService(tr, ur, cr, cur, &mdt)
@@ -87,7 +88,7 @@ func Route(r *gin.Engine) {
 	articles.GET("/comments-by-article/:id", commentHandler.FindByArticleID)
 	articles.GET("/comments/:id", commentHandler.FindByID)
 	articles.POST("/create", articleHandler.Create)
-	articles.POST("/create-comment", middleware.AuthMiddleware(), commentHandler.Create)
+	articles.POST("/:articleID/create-comment", commentHandler.Create)
 	articles.PATCH("/update-comment", middleware.AuthMiddleware(), commentHandler.Update)
 	articles.DELETE("/delete-comment", middleware.AuthMiddleware(), commentHandler.Delete)
 

@@ -16,10 +16,11 @@ type CourseHandler struct {
 	courseUserService courses.CourseUserService
 }
 
-func NewCourseHandler(courseService courses.CourseService, userService service.UserService) *CourseHandler {
+func NewCourseHandler(courseService courses.CourseService, userService service.UserService, courseUserService courses.CourseUserService) *CourseHandler {
 	return &CourseHandler{
-		courseService: courseService,
-		userService:   userService,
+		courseService:     courseService,
+		userService:       userService,
+		courseUserService: courseUserService,
 	}
 }
 
@@ -168,5 +169,5 @@ func (ch *CourseHandler) GetCoursesByID(c *gin.Context) {
 			Title: course.Name,
 		})
 	}
-
+	utils.HttpSuccess(c, "Success get courses", results)
 }

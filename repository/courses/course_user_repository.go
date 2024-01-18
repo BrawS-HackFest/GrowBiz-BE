@@ -3,6 +3,7 @@ package courses
 import (
 	"HackFest/models"
 	"gorm.io/gorm"
+	"log"
 )
 
 type CourseUserRepository interface {
@@ -45,6 +46,7 @@ func (r *courseUserRepository) FindByCourseIDAndUserID(courseID uint, userID str
 func (r *courseUserRepository) FindByUserID(id string) ([]models.CourseUser, error) {
 	var data []models.CourseUser
 	if err := r.db.Where("user_id = ?", id).Find(&data).Error; err != nil {
+		log.Println("========\n", err, "\n========")
 		return data, err
 	}
 	return data, nil

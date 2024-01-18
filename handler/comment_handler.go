@@ -5,6 +5,7 @@ import (
 	"HackFest/service/article"
 	"HackFest/utils"
 	"github.com/gin-gonic/gin"
+	"log"
 	"strconv"
 )
 
@@ -19,18 +20,19 @@ func NewCommentHandler(commentService article.CommentService) *CommentHandler {
 func (ch *CommentHandler) Create(c *gin.Context) {
 	articleIDStr := c.Param("articleID")
 	articleID, _ := strconv.Atoi(articleIDStr)
-	userID := c.MustGet("userID").(string)
+	//userID := c.MustGet("userID").(string)
 
 	var comment models.CommentPost
 	if err := c.ShouldBindJSON(&comment); err != nil {
 		utils.HttpFailOrError(c, 400, "Bad request", err)
 		return
 	}
-	post, err := ch.commentService.Create(comment.Comment, uint(articleID), userID)
+	post, err := ch.commentService.Create(comment.Comment, uint(articleID), "dZtS5UZUC3MX6GABFlxhEluj4XH2")
 	if err != nil {
 		utils.HttpInternalError(c, "Can't create comment", err)
 		return
 	}
+	log.Println("=====================\n", post.ID, "\n", post.Comment, "\n=====================")
 	utils.HttpSuccess(c, "Success create comment", post)
 }
 

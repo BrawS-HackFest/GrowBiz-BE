@@ -33,7 +33,7 @@ func (c *commentService) Create(comment string, articleID uint, userID string) (
 	if err := c.commentRepository.Create(data); err != nil {
 		return models.ArticleComment{}, err
 	}
-	return models.ArticleComment{}, nil
+	return data, nil
 }
 
 func (c *commentService) FindByArticleID(id uint) ([]models.ArticleComment, error) {

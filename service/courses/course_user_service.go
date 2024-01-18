@@ -54,5 +54,9 @@ func (r *courseUserService) FindByCourseIDAndUserID(courseID uint, userID string
 }
 
 func (r *courseUserService) FindByUserID(id string) ([]models.CourseUser, error) {
-	return r.courseUserRepository.FindByUserID(id)
+	data, err := r.courseUserRepository.FindByUserID(id)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
