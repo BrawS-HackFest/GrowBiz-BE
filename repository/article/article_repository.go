@@ -39,7 +39,7 @@ func (a *articleRepository) FindAll() ([]models.Article, error) {
 
 func (a *articleRepository) FindByID(id uint) (models.Article, error) {
 	var data models.Article
-	err := a.db.First(&data, id).Error
+	err := a.db.Model(&models.Article{}).Preload("Comments").First(&data, id).Error
 	if err != nil {
 		log.Println("Error FindByID article: ", err)
 		return data, err

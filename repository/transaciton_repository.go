@@ -47,7 +47,7 @@ func (tr *transactionRepository) FindByID(id uint) (models.Transaction, error) {
 
 func (tr *transactionRepository) FindByUserID(id string) ([]models.Transaction, error) {
 	var data []models.Transaction
-	if err := tr.db.Where("user_id = ?", id).Find(&data).Error; err != nil {
+	if err := tr.db.Where("user_id = ?", id).Where("status = ?", "pending").Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil

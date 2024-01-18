@@ -36,7 +36,7 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	th := handler.NewTransactionHandler(ts)
 
 	ar := article.NewArticleRepository(db)
-	as := article2.NewArticleService(ar)
+	as := article2.NewArticleService(ar, ur)
 	ah := handler.NewArticleHandler(as)
 
 	cmr := article.NewCommentRepository(db)
@@ -88,7 +88,7 @@ func Route(r *gin.Engine) {
 	articles.GET("/comments-by-article/:id", commentHandler.FindByArticleID)
 	articles.GET("/comments/:id", commentHandler.FindByID)
 	articles.POST("/create", articleHandler.Create)
-	articles.POST("/:articleID/create-comment", commentHandler.Create)
+	articles.POST("/:articleID/create-comment", middleware.AuthMiddleware(), commentHandler.Create)
 	articles.PATCH("/update-comment", middleware.AuthMiddleware(), commentHandler.Update)
 	articles.DELETE("/delete-comment", middleware.AuthMiddleware(), commentHandler.Delete)
 
