@@ -16,7 +16,7 @@ import (
 )
 
 func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *handler.TransactionHandler,
-	*handler.ArticleHandler, *handler.CommentHandler) {
+	*handler.ArticleHandler, *handler.CommentHandler, *handler.MaterialHandler) {
 	mdt := mdtrans.NewMdtDriver()
 	ctr := repository.NewCategoryRepository(db)
 
@@ -31,6 +31,10 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	cs := courses2.NewCourseService(cr)
 	ch := handler.NewCourseHandler(cs, us, cus)
 
+	mr := courses.NewMaterialRepository(db)
+	ms := courses2.NewMaterialService(mr)
+	mh := handler.NewMaterialHandler(ms)
+
 	tr := repository.NewTransactionRepository(db)
 	ts := service.NewTransactionService(tr, ur, cr, cur, &mdt)
 	th := handler.NewTransactionHandler(ts)
@@ -43,7 +47,7 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	cms := article2.NewCommentService(cmr)
 	cmh := handler.NewCommentHandler(cms)
 
-	return uh, ch, th, ah, cmh
+	return uh, ch, th, ah, cmh, mh
 }
 
 func Route(r *gin.Engine) {
@@ -62,7 +66,7 @@ func Route(r *gin.Engine) {
 	})
 
 	userHandler, courseHandler, transactionHandler,
-		articleHandler, commentHandler := initHandler(database.InitDb())
+		articleHandler, commentHandler, materialHandler := initHandler(database.InitDb())
 
 	user := r.Group("/users")
 	course := r.Group("/courses")
@@ -76,7 +80,10 @@ func Route(r *gin.Engine) {
 	course.GET("/all", courseHandler.FindAll)
 	course.GET("/:id", courseHandler.FindByID)
 	course.GET("/courses-by-user", middleware.AuthMiddleware(), courseHandler.GetCoursesByID)
+	course.GET("/:id/materials", materialHandler.FindByCourseID)
+	course.GET("/materials/:id", materialHandler.FindByID)
 	course.POST("/create", courseHandler.Create)
+	course.POST("/create-materials", materialHandler.Create)
 
 	transaction.GET("/transactions-by-user", middleware.AuthMiddleware(), transactionHandler.FindByUserID)
 	transaction.GET("/:id", transactionHandler.FindByID)
