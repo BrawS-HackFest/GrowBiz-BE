@@ -9,6 +9,7 @@ type CourseUserService interface {
 	Create(data models.CourseUserPost) (models.CourseUser, error)
 	Update(courseID uint, userID string) error
 	FindByCourseIDAndUserID(courseID uint, userID string) (models.CourseUser, error)
+	FindByUserID(id string) ([]models.CourseUser, error)
 }
 
 type courseUserService struct {
@@ -50,4 +51,8 @@ func (r *courseUserService) FindByCourseIDAndUserID(courseID uint, userID string
 		return models.CourseUser{}, err
 	}
 	return result, nil
+}
+
+func (r *courseUserService) FindByUserID(id string) ([]models.CourseUser, error) {
+	return r.courseUserRepository.FindByUserID(id)
 }

@@ -61,7 +61,7 @@ func Route(r *gin.Engine) {
 	user := r.Group("/users")
 	course := r.Group("/courses")
 	transaction := r.Group("/transactions")
-	article := r.Group("/article")
+	articles := r.Group("/article")
 
 	user.GET("/profile", middleware.AuthMiddleware(), userHandler.GetProfile)
 	user.PATCH("/update-profile", userHandler.UpdateUser)
@@ -69,6 +69,7 @@ func Route(r *gin.Engine) {
 
 	course.GET("/all", courseHandler.FindAll)
 	course.GET("/:id", courseHandler.FindByID)
+	course.GET("/courses-by-user", middleware.AuthMiddleware(), courseHandler.GetCoursesByID)
 	course.POST("/create", courseHandler.Create)
 
 	transaction.GET("/transactions-by-user", middleware.AuthMiddleware(), transactionHandler.FindByUserID)
@@ -76,7 +77,7 @@ func Route(r *gin.Engine) {
 	transaction.POST("/charge", middleware.AuthMiddleware(), transactionHandler.Create) //auth
 	transaction.POST("/update", transactionHandler.Update)
 
-	article.GET("/all", articleHandler.FindAll)
-	article.GET("/:id", articleHandler.FindByID)
-	article.POST("/create", articleHandler.Create)
+	articles.GET("/all", articleHandler.FindAll)
+	articles.GET("/:id", articleHandler.FindByID)
+	articles.POST("/create", articleHandler.Create)
 }

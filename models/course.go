@@ -58,3 +58,8 @@ type CourseResponse struct {
 	Price  int    `json:"price"`
 	Rating int    `json:"rating"`
 }
+
+type CourseByUserID struct {
+	Pict  string `json:"pict"`
+	Title string `json:"title"`
+}

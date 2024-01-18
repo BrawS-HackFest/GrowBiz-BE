@@ -11,8 +11,9 @@ import (
 )
 
 type CourseHandler struct {
-	courseService courses.CourseService
-	userService   service.UserService
+	courseService     courses.CourseService
+	userService       service.UserService
+	courseUserService courses.CourseUserService
 }
 
 func NewCourseHandler(courseService courses.CourseService, userService service.UserService) *CourseHandler {
@@ -23,14 +24,14 @@ func NewCourseHandler(courseService courses.CourseService, userService service.U
 }
 
 func (ch *CourseHandler) FindAll(c *gin.Context) {
-	courses, err := ch.courseService.FindAll()
+	data, err := ch.courseService.FindAll()
 	if err != nil {
 		utils.HttpInternalError(c, "Can't get courses", err)
 		return
 	}
 
 	var fixCourses []models.CourseResponse
-	for _, course := range courses {
+	for _, course := range data {
 		data := models.CourseResponse{
 			ID:     course.ID,
 			Pict:   course.Link,
@@ -145,4 +146,27 @@ func (ch *CourseHandler) Create(c *gin.Context) {
 		utils.HttpInternalError(c, "Can't create courses", err)
 		return
 	}
+}
+
+func (ch *CourseHandler) GetCoursesByID(c *gin.Context) {
+	id := c.MustGet("userID").(string)
+	data, err := ch.courseUserService.FindByUserID(id)
+	if err != nil {
+		utils.HttpInternalError(c, "Can't get courses", err)
+		return
+	}
+
+	var results []models.CourseByUserID
+	for _, v := range data {
+		course, err := ch.courseService.FindByID(uint(v.CourseID))
+		if err != nil {
+			utils.HttpInternalError(c, "Can't get courses", err)
+			return
+		}
+		results = append(results, models.CourseByUserID{
+			Pict:  course.Link,
+			Title: course.Name,
+		})
+	}
+
 }
