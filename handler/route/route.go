@@ -16,7 +16,7 @@ import (
 )
 
 func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *handler.TransactionHandler,
-	*handler.ArticleHandler) {
+	*handler.ArticleHandler, *handler.CommentHandler) {
 	mdt := mdtrans.NewMdtDriver()
 	ctr := repository.NewCategoryRepository(db)
 
@@ -38,7 +38,11 @@ func initHandler(db *gorm.DB) (*handler.UserHandler, *handler.CourseHandler, *ha
 	as := article2.NewArticleService(ar)
 	ah := handler.NewArticleHandler(as)
 
-	return uh, ch, th, ah
+	cmr := article.NewCommentRepository(db)
+	cms := article2.NewCommentService(cmr)
+	cmh := handler.NewCommentHandler(cms)
+
+	return uh, ch, th, ah, cmh
 }
 
 func Route(r *gin.Engine) {
@@ -56,7 +60,8 @@ func Route(r *gin.Engine) {
 		}
 	})
 
-	userHandler, courseHandler, transactionHandler, articleHandler := initHandler(database.InitDb())
+	userHandler, courseHandler, transactionHandler,
+		articleHandler, commentHandler := initHandler(database.InitDb())
 
 	user := r.Group("/users")
 	course := r.Group("/courses")
@@ -79,5 +84,11 @@ func Route(r *gin.Engine) {
 
 	articles.GET("/all", articleHandler.FindAll)
 	articles.GET("/:id", articleHandler.FindByID)
+	articles.GET("/comments-by-article/:id", commentHandler.FindByArticleID)
+	articles.GET("/comments/:id", commentHandler.FindByID)
 	articles.POST("/create", articleHandler.Create)
+	articles.POST("/create-comment", middleware.AuthMiddleware(), commentHandler.Create)
+	articles.PATCH("/update-comment", middleware.AuthMiddleware(), commentHandler.Update)
+	articles.DELETE("/delete-comment", middleware.AuthMiddleware(), commentHandler.Delete)
+
 }
